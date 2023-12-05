@@ -1,15 +1,22 @@
 {
   "name": "statki",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "ag-grid-community": "^31.0.0",
+    "ag-grid-vue3": "^31.0.0",
     "core-js": "^3.8.3",
+    "socket.io-client": "^4.7.2",
+    "uuid": "^8.3.2",
+    "uuidv4": "^6.2.13",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "ws": "^7.5.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
