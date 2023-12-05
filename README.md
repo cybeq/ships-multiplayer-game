@@ -28,3 +28,6 @@ cd server && npm i && node main.mjs
 # Made with socket.io, express.js, Vue3, Ag Grid
 ## MIT
 #### Mateusz Świderski, mateuszss00b@gmail.com
+
+-------------
+![gif.gif](gif.gif)
