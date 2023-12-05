@@ -1,6 +1,12 @@
 ## WARSHIPS
 #### Tiny multiplayer game that allows any player to join the server and conquer
 ````
+(
+ node version v15.14.0.
+ If some lib is incompatible, please use npm i --legacy-peer-deps
+ 
+ )
+------
 npm i && npm run serve
 cd server && npm i && node main.mjs
 ````
