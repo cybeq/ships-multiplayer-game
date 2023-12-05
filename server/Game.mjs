@@ -40,7 +40,6 @@ export class Game {
             this.socket.emit('error', 'no player')
             return;
         }
-        console.log('player', player)
         try{
             player.board.setShipCoordinates(x,y,z)
             this.io.to(playerId).emit('coordinateSet', {message: 'COORDINATES HAS BEEN SET', x,y,z, success:true})
@@ -60,8 +59,6 @@ export class Game {
             player:player.id
         })
         if(this.players.filter(p=>p.ready === true).length>1){
-            console.log('wszyscy gotowi na co czekamy')
-            console.log(this.players)
             this.io.emit('showBoards', this.players)
         }
     }

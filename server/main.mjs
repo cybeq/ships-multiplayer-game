@@ -23,9 +23,6 @@ const serverBox = {
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
 io.on('connection', (socket) => {
     serverBox.onlinePlayers.push({
         id:socket.id
@@ -45,15 +42,14 @@ io.on('connection', (socket) => {
     socket.on(`askRival`, (params)=>{
         try{
             var challenge = params
-            console.log('challenge', challenge)
             if(!challenge.pending || !challenge.asking){
-                console.log("INVALID CHALLENGE OBJECT")
+                console.error("INVALID CHALLENGE OBJECT")
                 socket.emit("error", "INVALID CHALLENGE OBJECT")
                 return;
             }
             io.emit('askRival', params)
         }catch{
-            console.log('blad zapytania, niepoprawny format json')
+            console.error('blad zapytania, niepoprawny format json')
         }
     })
 
@@ -65,9 +61,8 @@ io.on('connection', (socket) => {
                 socket.emit("error", "USER HAS ESCAPED")
                 return;
             }
-            console.log('challenge', challenge)
             if(!challenge.pending || !challenge.asking){
-                console.log("INVALID CHALLENGE OBJECT")
+                console.error("INVALID CHALLENGE OBJECT")
                 socket.emit("error", "INVALID CHALLENGE OBJECT")
                 return;
             }
@@ -84,16 +79,12 @@ io.on('connection', (socket) => {
             io.emit('startGame', challenge)
 
         }catch{
-            console.log('JSON PARSING ERROR, NOT AN OBJECT')
+            console.error('JSON PARSING ERROR, NOT AN OBJECT')
             socket.emit("error", "JSON PARSING ERROR, NOT AN OBJECT")
         }
 
     })
 
-    socket.on('message', (message) => {
-        console.log(`Received message: ${message}`);
-        io.emit('message', `Server: ${message}`);
-    });
 
     socket.on('outGame',params=>{
         var game = serverBox.games.find(g=>g._key === params.key)
@@ -101,13 +92,11 @@ io.on('connection', (socket) => {
             var p = serverBox.onlinePlayers.find(_p=>_p.id === p.id);
             if(p) p.inGame = false;
         })
-        console.log(`${params.playerId}___online players`, serverBox.onlinePlayers)
     })
 
     socket.on('setShipCoordinates', (params)=>{
         try {
             const _params = params
-            console.log('games', serverBox.games)
             const game = serverBox.games.find(g=> g._key === _params.key)
             if (!game) {
                 io.emit('error', 'NO GAME')
@@ -157,8 +146,6 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         serverBox.onlinePlayers = serverBox.onlinePlayers.filter(player=> player.id !== socket.id)
         io.emit('abortGame', socket.id)
-        console.log('User disconnected', socket.id);
-        console.log('active players', serverBox.onlinePlayers)
         io.emit('setOnline', serverBox.onlinePlayers)
     });
 

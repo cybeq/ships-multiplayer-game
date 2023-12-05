@@ -6,6 +6,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import { AgGridVue } from "ag-grid-vue3";
 import { io } from 'socket.io-client';
 import PopupMsg from "@/components/PopupMsg.vue";
+import alertE from "@/views/alertE";
 export default{
   components: {PopupMsg, GameRoom, AgGridVue},
   data(){
@@ -128,7 +129,9 @@ export default{
 
       this.socket.on('setOnline', (params)=>{
         console.log('setonline', params)
-        this.grid.api.setRowData(params)
+        if(this.grid.api) {
+          this.grid.api.setRowData(params)
+        }
       })
       this.socket.on('setPlayerId', (params)=>{
         this.player.id = params
@@ -162,15 +165,16 @@ export default{
       switch(params.colDef.field){
         case "play":
           if(this.gameKey){
-            alert('Yo have open game session')
+            alertE('Yo have open game session')
+
             return;
           }
           if(this.player.id === params.data.id){
-            alert('You cannot play with yourself. Find an oppenent and try again')
+            alertE('You cannot play with yourself. Find an oppenent and try again')
             return;
           }
           if(params.data.inGame){
-            alert("You need to wait for that player...")
+            alertE("You need to wait for that player...")
             return;
           }
           console.log(this.player.id + '__ wants to play with __' + params.data.id)

@@ -1,5 +1,6 @@
 <script>
 import {Board} from "@/models/Board";
+import alertE from "@/views/alertE";
 
 export default{
   props:{
@@ -40,7 +41,6 @@ export default{
         }
       })
       this.socket.on('playerReady', params=>{
-        console.log('player ready', params)
         this.opponentReady = true;
       })
       this.socket.on('showBoards',params=>{
@@ -60,6 +60,7 @@ export default{
           params,
           el
         } )
+        alertE("You missed", true)
       })
       this.socket.on('niceShot', params=>{
         console.log('params nice shot', params)
@@ -74,16 +75,17 @@ export default{
           params,
           el
         } )
+        alertE("NICE SHOT!", )
         console.log('niceShot', this.shooted)
       })
       this.socket.on('finish', params=>{
         console.log('game finished', params)
         if(params.looser === this.player.id){
-          alert('You lost')
+          alertE('You lost')
         }else{
-          alert('You won')
+          alertE('You won')
         }
-        location.reload()
+        setTimeout(()=>{ location.reload()},1500)
       })
       this.socket.on('drunk', params=>{
         console.log('your ship is dead', params)
@@ -91,16 +93,16 @@ export default{
         if(!el){
           console.error('no field on document, OMG :D')
         }
+        alertE("Your ships has been shot", true)
         el.classList.add('red')
         this.drunk.push({
           params,
           el
         } )
-        console.log('drunk', this.drunk)
       })
 
       this.socket.on('jail', params=>{
-        console.log('your opponent had a miss', params)
+        console.log('your opponent missed', params)
         const el = document.getElementById(`owned-${params.z}`)
         if(!el){
           console.error('no field on document, OMG :D')
@@ -110,7 +112,7 @@ export default{
           params,
           el
         } )
-        console.log('jail', this.jail)
+        alertE('Your opponent missed', true)
       })
     },
     onFieldMouseEnter(event, field){
