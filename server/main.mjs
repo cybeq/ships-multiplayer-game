@@ -127,6 +127,19 @@ io.on('connection', (socket) => {
             io.emit('error', 'ERROR / PARSE ERROR')
         }
     })
+    socket.on('shot', params=>{
+        const game = serverBox.games.find(g=> g._key === params.key)
+        if (!game) {
+            io.emit('error', 'NO GAME')
+            return;
+        }
+        if(game.getKey() !== params.key){
+            io.emit('error', 'wrong game key')
+            return;
+        }
+        game.shot(socket.id, params.x, params.y, params.z)
+
+    })
 
     socket.on('iAmReady', (params)=>{
         const game = serverBox.games.find(g=> g._key === params.key)

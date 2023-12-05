@@ -65,7 +65,32 @@ export class Game {
             this.io.emit('showBoards', this.players)
         }
     }
+    shot(playerId, x,y,z){
+        const opponent = this.players.find(p=>p.id !== playerId)
+        if(!opponent){
+            this.io.to(playerId).emit('error', 'NO OPPONENT / ERROR DATA')
+            return;
+        }
+        const opponentBoard = opponent.board;
+        if(!opponentBoard){
+            this.io.to(playerId).emit('error', 'NO OPPONENT BOARD / ERROR DATA')
+            return;
+        }
+        const goal = opponentBoard.ships.find(ship=> ship.z === z && ship.alive || (ship.x === x && ship.y ===y && ship.alive))
+        if(!goal){
+            this.io.to(playerId).emit('miss', {x,y,z})
+            this.io.to(opponent.id).emit('jail', {x,y,z})
+            return;
+        }
+        goal.alive = false;
+        this.io.to(playerId).emit('niceShot', {x, y, z})
+        this.io.to(opponent.id).emit('drunk', {x,y,z})
+        if(!opponentBoard.ships.find(ship=>  ship.alive )){
+            this.io.emit('finish', {looser:opponent.id})
+        }
 
+
+    }
 
 
 }
