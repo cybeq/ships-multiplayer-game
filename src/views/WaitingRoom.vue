@@ -51,7 +51,8 @@ export default{
               }
             },
             valueGetter:params=>{
-              return params.data.inGame ? 'IN GAME': 'FREE'
+              console.log('player.id',params.data)
+              return `${params.data.inGame ? 'IN GAME': 'FREE'}`
             }
           },
           {
@@ -195,12 +196,11 @@ export default{
 <template>
   <popup-msg v-if="popup" :message="popup.message" :button1="popup.button1" :button2="popup.button2"></popup-msg>
   <img src="@/assets/herb.png" style="width:200px; border-radius:90%">
-  <section class="game" v-if="this.gameKey">
+  <section  v-if="this.gameKey">
     <game-room :gameKey="this.gameKey" :socket="socket" :player="player" :payload="payload"></game-room>
   </section>
-  <section class="players" style="height:900px;">
-    <h1>Witaj, {{player.id}}</h1>
-
+  <section class="players" style="height:50px;">
+  <div>
     <ag-grid-vue
         class="ag-theme-alpine"
         :columnDefs="grid.columns"
@@ -212,6 +212,7 @@ export default{
         @cellClicked="cellClicked"
     >
     </ag-grid-vue>
+  </div>
   </section>
 
 

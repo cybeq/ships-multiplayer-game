@@ -33,6 +33,7 @@ export default{
           this.board.ships.pop()
           if(this.board.ships.length<1){
             this.mode = 'ready'
+            alertE('Waiting for player move', true)
             this.socket.emit('iAmReady', {
               key:this.gameKey,
               player:this.player,
@@ -82,8 +83,10 @@ export default{
         console.log('game finished', params)
         if(params.looser === this.player.id){
           alertE('You lost')
+          alert('You lost')
         }else{
           alertE('You won')
+          alert('You won')
         }
         setTimeout(()=>{ location.reload()},1500)
       })
@@ -160,15 +163,14 @@ export default{
 </script>
 
 <template>
+  <div>
   <h3 style="margin-bottom:80px;">{{payload.pending}} <span style="color:#c0143c;">⚔</span> {{payload.asking}}</h3>
-  <div v-if="this.mode === 'ready'">
-    <h3 style="color:red; margin-bottom:30px;">READY!</h3>
-    <p class="nomargin">waiting...</p>
   </div>
-  <div v-if="this.opponentReady">
-    <h3 style="color:red; margin-bottom:80px;">Your Opponent is READY!</h3>
+  <div v-if="this.opponentReady" style="height:120px">
+
   </div>
-  <section class="board-container" style="margin-top:-180px;">
+  <section class="board-container" style="height:450px;" >
+    <div class="div" >
     <div style="display: grid;grid-template-columns: 1fr 1fr">
       <main class="board">
       <div v-for="field in this.board.fields.z"
@@ -181,6 +183,10 @@ export default{
       ></div>
       </main>
       <main style=" text-align:right;">
+        <div v-if="this.mode === 'ready'">
+          <h1>Oczekiwanie</h1>
+          <p class="nomargin">Poczekaj na przeciwnika....</p>
+        </div>
         <div v-if="this.mode === 'arrange'">
           <h1>Twoje statki</h1>
           <p class="nomargin">Ulokuj wszystkie statki klikając na pola</p>
@@ -217,6 +223,7 @@ export default{
         </div>
       </main>
     </div>
+    </div>
   </section>
 </template>
 
@@ -224,13 +231,17 @@ export default{
 .board-container{
   width:100vw;
   height:100vh;
-  display:flex;
-  justify-content: center;
-  align-items: center;
+  .div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 .board{
   display:grid;
+  grid-gap:2px;
   width:fit-content;
+
   grid-template-columns: repeat(9,1fr);
 
 }

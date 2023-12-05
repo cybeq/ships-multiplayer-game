@@ -6,7 +6,8 @@ const obj_css = `
    left:20px;
    height:40px;
    border-radius:2px;
-   background:#b91919;
+   background: linear-gradient(275deg, rgba(121,9,74,1) 15%, rgba(255,0,41,1) 100%);
+   border-bottom:solid 3px rgba(255,0,41,1);
    padding:4px;
    font-size:0.9em;
    font-family: Arial, Helvetica, sans-serif;
@@ -16,7 +17,7 @@ export default (message, ylw) =>{
     const div = document.createElement('div')
     div.style.cssText = obj_css;
     div.innerText=message;
-    const color = "#b98119"
+    const color = "linear-gradient(275deg, rgba(9,33,121,1) 15%, rgba(0,131,255,1) 100%);"
     if(ylw){
         div.style.background = color;
     }
