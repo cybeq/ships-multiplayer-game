@@ -48,6 +48,7 @@ export default{
         this.mode = 'play'
         this.opponentReady = false;
         this.selected.forEach(s=>s.classList.remove('black'))
+        console.log('selected', this.selected)
       })
       this.socket.on('miss', params=>{
         console.log('miss', params)
@@ -215,7 +216,7 @@ export default{
             <div v-for="field in this.board.fields.z"
                  :key="field"
                  class="field"
-                 style="width:12px; height:15px;"
+                 :style="`width:12px; height:15px; ${this.selected.find(s=>s.id === field) ? 'background:linear-gradient(275deg, rgba(9,33,121,1) 15%, rgba(12,136,158,1) 100%);' :'' }`"
                  :id="`owned-${field}`"
             ></div>
           </main>
