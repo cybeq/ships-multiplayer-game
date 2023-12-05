@@ -1,6 +1,9 @@
 ## WARSHIPS
 #### Tiny multiplayer game that allows any player to join the server and conquer
-
+````
+npm i && npm run serve
+cd server && npm i && node main.mjs
+````
 # 1. Online activity
 - Waiting room informs you as a new player has appeard
 ![img.png](img.png)
