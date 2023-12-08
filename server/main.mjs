@@ -29,6 +29,12 @@ const serverBox = {
 };
 
 const connection = await dbInit(mysql, dbConfig, io);
+if(!connection){
+    console.error('____________________')
+    console.dir('YOU NEED TO PASS GOOD CONNECTION PARAMS')
+    console.error('__________________')
+    throw new Error("NO DB CONNECTION")
+}
 
 const results = await connection.query('SELECT * FROM results');
 app.get('/results', async (req, res) => {
