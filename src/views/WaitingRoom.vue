@@ -7,8 +7,17 @@ import { AgGridVue } from "ag-grid-vue3";
 import { io } from 'socket.io-client';
 import PopupMsg from "@/components/PopupMsg.vue";
 import alertE from "@/views/alertE";
+import {GameService} from "@/services/GameService";
+import ResultGrid from "@/views/ResultGrid";
+import OnlineGrid from "@/views/OnlineGrid";
 export default{
   components: {PopupMsg, GameRoom, AgGridVue},
+  setup(){
+    const service = new GameService();
+    return {
+      service
+    }
+  },
   data(){
     return{
       socketData:{
@@ -17,76 +26,23 @@ export default{
       player:{
         id:null,
       },
+
+      results:{
+        rows:[],
+        grid:new ResultGrid(this.service)
+      },
       gameKey:null,
       payload:null,
       socket:undefined,
       players:[],
-      grid:{
-        api:undefined,
-        data:[
-          {
-            id:"3123"
-          }
-        ],
-        columns:[
-          {
-            headerName:'PLAYER_ID',
-            field:'id',
-            flex:1,
-            headerClass: 'ag-right-aligned-header',
-            cellStyle:params=>{
-              return{
-                textAlign:'right'
-              }
-            }
-          },
-          {
-            headerName:'Status',
-            field:'status',
-            flex:1,
-            cellStyle:params=>{
-              return{
-                textAlign:'left',
-                color: params.data.inGame ? 'red' : 'darkgreen'
-              }
-            },
-            valueGetter:params=>{
-              console.log('player.id',params.data)
-              return `${params.data.inGame ? 'IN GAME': 'FREE'}`
-            }
-          },
-          {
-            headerName:'Play',
-            field:'play',
-            flex:1,
-            cellStyle:params=>{
-              return{
-                textAlign:'left',
-                border:'solid 1px #00000020',
-                background:'#00000020',
-                cursor:'pointer'
-              }
-            },
-            valueGetter:params=>{
-             return "🕹"
-            }
-          }
-        ],
-        options:{
-            onGridReady: params =>{
-              this.grid.api = params.api;
-              this.grid?.api?.setRowData(this.grid.data)
-            }
-
-
-        }
-      },
+      grid:new OnlineGrid(),
       popup:null
     }
   },
   mounted() {
     new Board()
     this.socketHandler()
+
   },
   methods:{
     socketHandler(){
@@ -209,6 +165,17 @@ export default{
         :paginationPageSize="30"
         :rowMultiSelectWithClick="true"
         :grid-options="this.grid.options"
+        @cellClicked="cellClicked"
+    >
+    </ag-grid-vue>
+    <ag-grid-vue
+        class="ag-theme-alpine"
+        :columnDefs="results.grid.columns"
+        style="height:700px;"
+        :pagination="true"
+        :paginationPageSize="30"
+        :rowMultiSelectWithClick="true"
+        :grid-options="results.grid.options"
         @cellClicked="cellClicked"
     >
     </ag-grid-vue>

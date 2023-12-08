@@ -5,21 +5,41 @@ import { Server } from "socket.io";
 import {Game} from "./Game.mjs";
 import {uuid} from "uuidv4";
 import cors from 'cors';
-
+import mysql from 'mysql2/promise';
+import dbInit from "./database/dbInit.mjs";
 const app = express();
 app.use(cors({
     origin: '*',
 }));
+
+
 const server = http.createServer(app);
 const io = new Server(server);
 
-
+const dbConfig = {
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    port:1214
+};
 
 const serverBox = {
     onlinePlayers:[],
     games:[],
 };
 
+const connection = await dbInit(mysql, dbConfig, io);
+
+const results = await connection.query('SELECT * FROM results');
+app.get('/results', async (req, res) => {
+    try {
+        const results = await connection.query('SELECT * FROM results')
+        res.json(results[0]);
+    } catch (error) {
+        res.status(500).json({ error: 'SE' });
+    }
+});
+console.log('obecne wyniki', results)
 
 app.use(express.static('public'));
 
@@ -67,7 +87,7 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const game = (new Game(io, socket, challenge, uuid(), serverBox));
+            const game = (new Game(io, socket, challenge, uuid(), serverBox, connection));
             serverBox.games.push(game);
             challenge.key = game.getKey()
 

@@ -6,6 +6,7 @@ export class Game {
     io = undefined;
     socket = undefined;
     serverBox = undefined;
+    connection = undefined
     players = [
         {
             board: new Board(),
@@ -18,7 +19,7 @@ export class Game {
             ready:false,
         }
     ]
-    constructor(io, socket, challenge, key, serverBox) {
+    constructor(io, socket, challenge, key, serverBox, connection) {
         this.socketHandler()
         this.io = io;
         this.socket = socket;
@@ -27,6 +28,7 @@ export class Game {
         this.players[1].id = challenge.pending
         this.status = 'hashing'
         this.serverBox = serverBox;
+        this.connection = connection
     }
     getKey(){
         return this._key
@@ -84,6 +86,7 @@ export class Game {
         this.io.to(opponent.id).emit('drunk', {x,y,z})
         if(!opponentBoard.ships.find(ship=>  ship.alive )){
             this.io.emit('finish', {looser:opponent.id})
+            this.connection.query('INSERT INTO results (playerA, playerB, winner) VALUES (?, ?, ?)', [playerId, opponent.id, playerId]);
         }
 
 

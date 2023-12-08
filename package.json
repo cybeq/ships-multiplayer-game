@@ -9,6 +9,7 @@
   "dependencies": {
     "ag-grid-community": "^31.0.0",
     "ag-grid-vue3": "^31.0.0",
+    "axios": "^1.6.2",
     "core-js": "^3.8.3",
     "socket.io-client": "^4.7.2",
     "uuid": "^8.3.2",
